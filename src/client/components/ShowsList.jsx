@@ -8,7 +8,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { styled } from '@mui/system';
 
-
 const RootPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   maxWidth: 600,
@@ -24,12 +23,10 @@ const ShowsList = () => {
   const [shows, setShows] = useState([]);
 
   useEffect(() => {
-
     document.body.classList.add('shows-list-page');
 
     const fetchShows = async () => {
       try {
-        // Make the API request to get shows (adjust the URL based on your API route)
         const response = await fetch('/api/shows');
         const data = await response.json();
         setShows(data);
@@ -46,9 +43,7 @@ const ShowsList = () => {
 
   return (
     <RootPaper elevation={3} className='shows-card'>
-      <Heading variant="h4">
-        Upcoming Shows
-      </Heading>
+      <Heading variant="h4">Upcoming Shows</Heading>
       <List>
         {shows.map((show, index) => (
           <React.Fragment key={show.id}>
@@ -67,6 +62,13 @@ const ShowsList = () => {
                   </>
                 }
               />
+              {show.image_url && (
+                <img
+                  src={show.image_url}
+                  alt={`Show at ${show.venue}`}
+                  style={{ marginLeft: 'auto', maxHeight: 100 }}
+                />
+              )}
             </ListItem>
           </React.Fragment>
         ))}

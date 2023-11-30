@@ -12,6 +12,7 @@ const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [drawerOpen, setDrawerOpen] = useState(false);
+  
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -20,6 +21,16 @@ const NavBar = () => {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+
+  const handleLogout = () => {
+    // Remove the token from localStorage
+    localStorage.removeItem('token');
+    // Redirect to the home page after logout
+    window.location.href = '/';
+  };
+
+  // Check if the user is logged in based on the presence of a token in localStorage
+  const isLoggedIn = localStorage.getItem('token') !== null;
 
   return (
     <StyledAppBar position="sticky">
@@ -32,7 +43,6 @@ const NavBar = () => {
             src="/discologo.PNG"
             alt="Logo"
             style={{ width: '40px', height: '40px' }}
-            
           />
         </IconButton>
 
@@ -55,9 +65,21 @@ const NavBar = () => {
                 <ListItem button component={Link} to="/shows" onClick={handleDrawerClose}>
                   <ListItemText primary="Shows" />
                 </ListItem>
-                <ListItem button component={Link} to="/login" onClick={handleDrawerClose}>
-                  <ListItemText primary="Login" />
-                </ListItem>
+                {isLoggedIn && (
+                  <>
+                    <ListItem button component={Link} to="/me" onClick={handleDrawerClose}>
+                      <ListItemText primary="Profile" />
+                    </ListItem>
+                    <ListItem button onClick={handleLogout}>
+                      <ListItemText primary="Logout" />
+                    </ListItem>
+                  </>
+                )}
+                {!isLoggedIn && (
+                  <ListItem button component={Link} to="/login" onClick={handleDrawerClose}>
+                    <ListItemText primary="Login" />
+                  </ListItem>
+                )}
               </List>
             </Drawer>
           </>
@@ -69,12 +91,21 @@ const NavBar = () => {
             <Button color="inherit" component={Link} to="/shows">
               Shows
             </Button>
-            <Button color="inherit" component={Link} to="/me">
-              Profile
-            </Button>
-            <Button color="inherit" component={Link} to="/login">
-              Login
-            </Button>
+            {isLoggedIn && (
+              <>
+                <Button color="inherit" component={Link} to="/me">
+                  Profile
+                </Button>
+                <Button color="inherit" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
+            )}
+            {!isLoggedIn && (
+              <Button color="inherit" component={Link} to="/login">
+                Login
+              </Button>
+            )}
           </>
         )}
       </Toolbar>

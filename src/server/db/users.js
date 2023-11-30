@@ -2,20 +2,21 @@ const db = require('./client')
 const bcrypt = require('bcrypt');
 const SALT_COUNT = 10;
 
-const createUser = async({ name='first last', email, password }) => {
+const createUser = async ({ name = 'first last', email, password, profile_image_url }) => {
     const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
     try {
-        const { rows: [user ] } = await db.query(`
-        INSERT INTO users(name, email, password)
-        VALUES($1, $2, $3)
-        ON CONFLICT (email) DO NOTHING
-        RETURNING *`, [name, email, hashedPassword]);
-
-        return user;
+      const { rows: [user] } = await db.query(`
+          INSERT INTO users(name, email, password, profile_image_url)
+          VALUES($1, $2, $3, $4)
+          ON CONFLICT (email) DO NOTHING
+          RETURNING *`, [name, email, hashedPassword, profile_image_url]);
+  
+      return user;
     } catch (err) {
-        throw err;
+      throw err;
     }
-}
+  };
+  
 
 const getUser = async({email, password}) => {
     if(!email || !password) {
@@ -50,8 +51,30 @@ const getUserByEmail = async(email) => {
     }
 }
 
+const getUserById = async (id) => {
+    try {
+      const { rows: [user] } = await db.query(`
+        SELECT *
+        FROM users
+        WHERE id = $1;
+      `, [id]);
+  
+      if (!user) {
+        return;
+      }
+  
+      // Remove sensitive information before returning
+      delete user.password;
+  
+      return user;
+    } catch (err) {
+      throw err;
+    }
+  };
+
 module.exports = {
     createUser,
     getUser,
-    getUserByEmail
+    getUserByEmail,
+    getUserById
 };

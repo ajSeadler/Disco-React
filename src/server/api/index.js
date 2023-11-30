@@ -49,6 +49,9 @@ const usersRouter = require("./users");
 apiRouter.use("/users", usersRouter);
 
 const showsRouter = require("./shows"); // Import the shows route
-apiRouter.use("/shows", showsRouter); // Use the shows route at /shows
+apiRouter.use("/shows", showsRouter);
+
+const favoritesRouter = require("./favorites");
+apiRouter.use("/favorites", favoritesRouter);// Use the shows route at /shows
 
 module.exports = apiRouter;

@@ -1,4 +1,10 @@
 import React, { useState } from 'react';
+import {
+  Typography,
+  TextField,
+  Button,
+  Paper,
+} from '@mui/material';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -25,25 +31,26 @@ const Login = () => {
           password
         })
       });
-  
+
       const result = await response.json();
-  
+
       if (!response.ok) {
         if (result.name === 'IncorrectCredentialsError') {
           setMessage('Incorrect email or password. Please try again.');
         } else {
           setMessage('An error occurred. Please try again later.');
         }
-  
+
         throw result;
       }
-  
+
       // Store the token in localStorage
       localStorage.setItem('token', result.token);
-  
+
       setMessage('Login successful!');
       setEmail('');
       setPassword('');
+      window.location.href = '/me';
     } catch (err) {
       console.error(`${err.name}: ${err.message}`);
     }
@@ -55,33 +62,43 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <Paper elevation={3} style={{ maxWidth: 400, margin: 'auto', padding: 20, marginTop: 50 }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        Login
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor='email'>Email:</label>
-          <input
-            type='email'
-            id='email'
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor='password'>Password:</label>
-          <input
-            type='password'
-            id='password'
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <button type='submit'>Login</button>
+        <TextField
+          label="Email"
+          type="email"
+          fullWidth
+          value={email}
+          onChange={handleEmailChange}
+          required
+          margin="normal"
+        />
+        <TextField
+          label="Password"
+          type="password"
+          fullWidth
+          value={password}
+          onChange={handlePasswordChange}
+          required
+          margin="normal"
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          style={{ marginTop: 20, backgroundColor: 'salmon' }}
+        >
+          Login
+        </Button>
       </form>
-      <p>{message}</p>
-    </div>
+      <Typography variant="body1" align="center" color="error">
+        {message}
+      </Typography>
+    </Paper>
   );
 };
 

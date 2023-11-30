@@ -1,4 +1,5 @@
 module.exports = {
     ...require('./users'),
-    ...require('./shows')
+    ...require('./shows'),
+    ...require('./favorites')
 }
