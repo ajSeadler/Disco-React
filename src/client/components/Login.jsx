@@ -13,29 +13,41 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const login = async() => {
+  const login = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/users/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            }, 
-            body: JSON.stringify({
-                email,
-                password
-            })
-        });
-        const result = await response.json();
-        setMessage(result.message);
-        if(!response.ok) {
-          throw(result)
+      const response = await fetch('http://localhost:3000/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email,
+          password
+        })
+      });
+  
+      const result = await response.json();
+  
+      if (!response.ok) {
+        if (result.name === 'IncorrectCredentialsError') {
+          setMessage('Incorrect email or password. Please try again.');
+        } else {
+          setMessage('An error occurred. Please try again later.');
         }
-        setEmail('');
-        setPassword('');
+  
+        throw result;
+      }
+  
+      // Store the token in localStorage
+      localStorage.setItem('token', result.token);
+  
+      setMessage('Login successful!');
+      setEmail('');
+      setPassword('');
     } catch (err) {
-        console.error(`${err.name}: ${err.message}`);
+      console.error(`${err.name}: ${err.message}`);
     }
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();

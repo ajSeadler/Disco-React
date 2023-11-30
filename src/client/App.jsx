@@ -1,17 +1,31 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import Login from './components/Login';
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./components/Login";
+import ShowsList from "./components/ShowsList";
+import HomePage from "./components/HomePage";
+import NavBar from "./components/NavBar";
+import ProfilePage from "./components/ProfilePage";
+
+const token = localStorage.getItem("token");
+if (token) {
+  console.log("Token found:", token);
+} else {
+  console.log("No token found");
+}
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className='App'>
-        <h1>Boilerplate</h1>
-        <img id='comp-img' src='./computer.png'></img>
-        <p>Replace the starter code in this template with something cool</p>
-        <Login />
-    </div>
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/shows" element={<ShowsList />} />
+        <Route path="/me" element={<ProfilePage />} />
+      </Routes>
+    </Router>
   );
 }
 

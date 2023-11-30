@@ -6,6 +6,7 @@
   height: 100vh; 
 }
 
+
 .App-header {
   margin-bottom: 20px;
   font-size: 24px;
@@ -13,6 +14,11 @@
 
 #comp-img{
   width: 250px;
+}
+
+.shows-list-page {
+  background-color: #505050;
+  
 }
 
 /* Add more styling for other elements if needed */
